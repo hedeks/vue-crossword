@@ -1,11 +1,15 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
-import { crosswordStore } from '@/stores/store.js'
 
 const searchInput = ref()
 const router = useRouter();
 const isSearched = ref({ toggled: false });
+const isScrolled = ref(false);
+
+const handleScroll = () => {
+    isScrolled.value = window.scrollY > 0;
+}
 
 const toggle = () => {
     isSearched.value.toggled = !isSearched.value.toggled;
@@ -14,17 +18,19 @@ watch(
     () => isSearched.value.toggled,
     (newValue) => {
         if (newValue == true) {
-            // searchInput.value.focus()
             setTimeout(() => {
                 searchInput.value.focus()
             }, 0);
         }
     });
+    onMounted(()=>{
+        window.addEventListener('scroll', handleScroll);
+    });
 
 </script>
 
 <template>
-    <div class="header">
+    <div class="header" :class="{ active: isScrolled }">
         <div class="icons search-container">
             <div class="search" @click="toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -42,14 +48,14 @@ watch(
             better_than_crossword
         </p>
         <div class="icons">
-            <div class="crosswords" @click="router.push({name: 'CrosswordsList'})">
+            <div class="crosswords" @click="router.push({ name: 'CrosswordsList' })">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px"
                     y="0px" viewBox="0 0 96 96" enable-background="new 0 0 96 96">
                     <path
                         d="M23.25,91.251h15.5h1.5h15.5h1.5h15.5h1.5h17v-17v-1.5v-15.5v-1.5v-15.5v-1.5v-15.5v-1.5v-17h-17h-1.5h-15.5h-1.5h-15.5  h-1.5h-15.5h-1.5h-17v17v1.5v15.5v1.5v15.5v1.5v15.5v1.5v17h17H23.25z M74.25,6.251h15.5v15.5h-15.5V6.251z M74.25,23.251h15.5v15.5  h-15.5V23.251z M74.25,40.251h15.5v15.5h-15.5V40.251z M74.25,57.251h15.5v15.5h-15.5V57.251z M74.25,74.251h15.5v15.5h-15.5V74.251  z M57.25,6.251h15.5v15.5h-15.5V6.251z M57.25,23.251h15.5v15.5h-15.5V23.251z M57.25,74.251h15.5v15.5h-15.5V74.251z M40.25,23.251  h15.5v15.5h-15.5V23.251z M40.25,57.251h15.5v15.5h-15.5V57.251z M40.25,74.251h15.5v15.5h-15.5V74.251z M23.25,6.251h15.5v15.5  h-15.5V6.251z M23.25,23.251h15.5v15.5h-15.5V23.251z M23.25,40.251h15.5v15.5h-15.5V40.251z M23.25,57.251h15.5v15.5h-15.5V57.251z   M6.25,6.251h15.5v15.5H6.25V6.251z M6.25,23.251h15.5v15.5H6.25V23.251z M6.25,40.251h15.5v15.5H6.25V40.251z M6.25,57.251h15.5  v15.5H6.25V57.251z" />
                 </svg>
             </div>
-            <div class="avatar" @click="router.push({name: 'Profile'})">
+            <div class="avatar" @click="router.push({ name: 'Profile' })">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <rect width="18" height="18" fill="none" style="mix-blend-mode:multiply" />
                     <path
@@ -65,6 +71,9 @@ watch(
 </template>
 
 <style lang="scss" scoped>
+.active {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 .search-input {
     width: 100px;
@@ -120,10 +129,16 @@ svg {
 }
 
 .header {
+    margin: 0 -20px 0 -20px;
     height: 66px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: sticky;
+    top: 0px;
+    background-color: white;
+    z-index: 1000;
+    transition: box-shadow 0.2s ease-in-out;
 }
 
 .label {
@@ -151,6 +166,10 @@ svg {
 @media screen and (max-width: 768px) {
     .search-container {
         display: none;
+    }
+
+    .header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 }
 

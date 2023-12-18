@@ -12,7 +12,9 @@ export default defineComponent({
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { watch, ref } from 'vue'
 
+const path = ref('')
 const router = useRouter();
 </script>
 

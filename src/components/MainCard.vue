@@ -1,13 +1,13 @@
 <template>
-    <div class="card">
-        <div class="img">
-            <img class="img-item" :src="imgPath" alt="img"
-                :class="[{ imgSizeAuto: imgSize === 'auto' }, { imgSizeSmall: imgSize === 'small' }]">
+        <div class="card">
+            <div class="img">
+                <img class="img-item" :src="imgPath" alt="img"
+                    :class="[{ imgSizeAuto: imgSize === 'auto' }, { imgSizeSmall: imgSize === 'small' }]">
+            </div>
+            <h3>{{ header }}</h3>
+            <p> {{ text }} </p>
+            <button class="button" @click="router.push({ name: buttonLink })"> {{ buttonSlot }} </button>
         </div>
-        <h3>{{ header }}</h3>
-        <p> {{ text }} </p>
-        <button class="button" @click="router.push({ name: buttonLink })"> {{ buttonSlot }} </button>
-    </div>
 </template>
 
 <script setup>
@@ -26,6 +26,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
+
 .card {
     padding: 0 0 20px 0;
     display: flex;
@@ -51,7 +52,8 @@ const props = defineProps({
     }
 
     &:hover {
-        background-color: #cacaca;
+        cursor: default;
+        background-color: #dddddd;
         border: 1px solid black;
     }
 
@@ -109,4 +111,5 @@ const props = defineProps({
             transform: scale(0.95);
         }
     }
-}</style>
+}
+</style>

@@ -38,12 +38,13 @@ const router = useRouter();
 
 <style lang="scss" scoped>
 .main-content {
+    min-height: 650px;
     display: flex;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 100px;
-    min-height: 650px;
+    margin: 30px 0 30px 0;
 }
 
 @media screen and (max-width: 768px) {

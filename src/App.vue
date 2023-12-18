@@ -3,7 +3,9 @@
     <Header />
     <BreadCramps />
     <main>
-      <router-view></router-view>
+      <router-view v-slot="{ Component }">
+          <component :is="Component"/>
+      </router-view>
     </main>
     <Footer style="margin-top: auto;" />
   </div>
@@ -20,14 +22,22 @@ export default {
   }
 }  
 </script>
-<script setup>
-</script>
-
 <style lang="scss">
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.1s ease-in-out;
+};
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -47,6 +57,10 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 0 20px 0 20px;
   min-height: 100vh;
+}
+
+main {
+  flex: 1;
 }
 
 @media only screen and (max-width: 1280px) {
