@@ -1,6 +1,5 @@
 <template>
     <div class="bread-cramps">
-        {{ router.getRoutes() }}
     </div>
 </template>
 <script>
@@ -20,5 +19,15 @@ const router = useRouter();
 <style lang="scss">
 .bread-cramps{
     font-family: linux-libertine-o;
+    background-color: #F2F2F2;
+    margin: 0 -20px 0 -20px;
+    padding: 0 20px 0 20px;
+    height: 51px;
+}
+
+@media screen and (max-width: 768px) {
+    .bread-cramps{
+        display: none;
+    }
 }
 </style>

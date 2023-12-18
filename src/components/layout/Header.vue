@@ -1,35 +1,26 @@
-<script>
+<script setup>
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router'
 import { crosswordStore } from '@/stores/store.js'
 
-export default {
-    setup() {
-        const searchInput = ref()
-        const router = useRouter();
-        const store = crosswordStore();
-        const isSearched = ref({ toggled: false });
-        
-        const toggle = () => {
-            isSearched.value.toggled = !isSearched.value.toggled;
-        }
+const searchInput = ref()
+const router = useRouter();
+const isSearched = ref({ toggled: false });
 
-        watch(
-            () => isSearched.value.toggled,
-            (newValue) => {
-                if (newValue == true) {
-                    // searchInput.value.focus()
-                    setTimeout(() => {
-                        searchInput.value.focus()
-                    }, 0);
-                }
-            })
-            
-        return {
-            searchInput, router, store, isSearched, toggle
-        }
-    }
+const toggle = () => {
+    isSearched.value.toggled = !isSearched.value.toggled;
 }
+watch(
+    () => isSearched.value.toggled,
+    (newValue) => {
+        if (newValue == true) {
+            // searchInput.value.focus()
+            setTimeout(() => {
+                searchInput.value.focus()
+            }, 0);
+        }
+    });
+
 </script>
 
 <template>
@@ -51,14 +42,14 @@ export default {
             better_than_crossword
         </p>
         <div class="icons">
-            <div class="crosswords" @click="console.log('тут кроссворды')">
+            <div class="crosswords" @click="router.push({name: 'CrosswordsList'})">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px"
                     y="0px" viewBox="0 0 96 96" enable-background="new 0 0 96 96">
                     <path
                         d="M23.25,91.251h15.5h1.5h15.5h1.5h15.5h1.5h17v-17v-1.5v-15.5v-1.5v-15.5v-1.5v-15.5v-1.5v-17h-17h-1.5h-15.5h-1.5h-15.5  h-1.5h-15.5h-1.5h-17v17v1.5v15.5v1.5v15.5v1.5v15.5v1.5v17h17H23.25z M74.25,6.251h15.5v15.5h-15.5V6.251z M74.25,23.251h15.5v15.5  h-15.5V23.251z M74.25,40.251h15.5v15.5h-15.5V40.251z M74.25,57.251h15.5v15.5h-15.5V57.251z M74.25,74.251h15.5v15.5h-15.5V74.251  z M57.25,6.251h15.5v15.5h-15.5V6.251z M57.25,23.251h15.5v15.5h-15.5V23.251z M57.25,74.251h15.5v15.5h-15.5V74.251z M40.25,23.251  h15.5v15.5h-15.5V23.251z M40.25,57.251h15.5v15.5h-15.5V57.251z M40.25,74.251h15.5v15.5h-15.5V74.251z M23.25,6.251h15.5v15.5  h-15.5V6.251z M23.25,23.251h15.5v15.5h-15.5V23.251z M23.25,40.251h15.5v15.5h-15.5V40.251z M23.25,57.251h15.5v15.5h-15.5V57.251z   M6.25,6.251h15.5v15.5H6.25V6.251z M6.25,23.251h15.5v15.5H6.25V23.251z M6.25,40.251h15.5v15.5H6.25V40.251z M6.25,57.251h15.5  v15.5H6.25V57.251z" />
                 </svg>
             </div>
-            <div class="avatar" @click="console.log('ваш профиль тут будет если авторизован а если нет то нет')">
+            <div class="avatar" @click="router.push({name: 'Profile'})">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <rect width="18" height="18" fill="none" style="mix-blend-mode:multiply" />
                     <path
@@ -73,17 +64,12 @@ export default {
     </div>
 </template>
 
-<style lang="scss">
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<style lang="scss" scoped>
 
 .search-input {
     width: 100px;
     outline: none;
-    transition: all 0.3 ease-in-out;
+    transition: all 0.3s ease-in-out;
 
     &::placeholder {
         font-family: Lohit Devanagari;
@@ -138,7 +124,6 @@ svg {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.10);
 }
 
 .label {
