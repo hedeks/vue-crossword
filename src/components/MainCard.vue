@@ -1,20 +1,22 @@
 <template>
-        <div class="card">
-            <div class="img">
-                <img class="img-item" :src="imgPath" alt="img"
-                    :class="[{ imgSizeAuto: imgSize === 'auto' }, { imgSizeSmall: imgSize === 'small' }]">
-            </div>
-            <h3>{{ header }}</h3>
-            <p> {{ text }} </p>
-            <button class="button" @click="router.push({ name: buttonLink })"> {{ buttonSlot }} </button>
+    <div class="card" @mouseenter="ishovered = true" @mouseleave="ishovered = false">
+        <div class="img" :class="{ img_hovered: ishovered }">
+            <img class="img-item" :src="imgPath" alt="img"
+                :class="[{ imgSizeAuto: imgSize === 'auto' }, { imgSizeSmall: imgSize === 'small' }]">
         </div>
+        <h3>{{ header }}</h3>
+        <p> {{ text }} </p>
+        <button v-if="!isNeedParam" class="button" @click="router.push({ name: buttonLink })"> {{ buttonSlot }} </button>
+        <button v-else class="button" @click="router.push({ name: buttonLink, params: { id : crossword_id} })"> {{ buttonSlot }} </button>
+    </div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
+import { ref } from 'vue'
 
 const router = useRouter();
-
+const ishovered = ref(false);
 const props = defineProps({
     header: String,
     text: String,
@@ -22,11 +24,12 @@ const props = defineProps({
     buttonSlot: String,
     buttonLink: String,
     imgSize: String,
+    isNeedParam: Boolean,
+    crossword_id: Number,
 });
 </script>
 
 <style lang="scss" scoped>
-
 .card {
     padding: 0 0 20px 0;
     display: flex;
@@ -61,6 +64,7 @@ const props = defineProps({
         margin: auto;
         height: 100px;
         width: 100px;
+
     }
 
     .img {
@@ -77,6 +81,12 @@ const props = defineProps({
             &:hover {
                 transform: scale(0.95);
             }
+        }
+
+        transition: all 0.2s ease-in-out;
+
+        &_hovered {
+            background-color: white !important;
         }
     }
 

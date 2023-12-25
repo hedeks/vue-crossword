@@ -142,10 +142,12 @@ svg {
 }
 
 .label {
-    font-size: 24px;
-    font-family: Lohit Devanagari;
+    font-size: 26px;
+    font-family: Quensides;
     margin: auto;
+    font-weight: 550;
     transition: color 0.1s ease-in-out, transform 0.1s ease-in-out;
+    letter-spacing: 2px;
 
     &:hover {
         cursor: pointer;
@@ -170,6 +172,9 @@ svg {
 
     .header {
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .icons {
+        width: 20%;
     }
 }
 

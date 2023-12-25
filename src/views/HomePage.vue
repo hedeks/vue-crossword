@@ -1,13 +1,7 @@
 <template>
     <div class="main-content">
-        <MainCard 
-        v-for="item in cards"
-        :key="item"
-        :header="item.header"
-        :text="item.text"
-        :img-path="item.imgPath" 
-        :button-slot="item.buttonSlot" 
-        :button-link="item.buttonLink" />
+        <MainCard v-for="item in cards" :key="item" :header="item.header" :text="item.text" :img-path="item.imgPath"
+            :button-slot="item.buttonSlot" :button-link="item.buttonLink" :isNeedParam=false />
     </div>
 </template>
 

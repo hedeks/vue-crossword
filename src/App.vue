@@ -3,8 +3,10 @@
     <Header />
     <BreadCramps />
     <main>
-      <router-view v-slot="{ Component }">
-          <component :is="Component"/>
+      <router-view v-slot="{ Component, route }">
+        <transition :duration="100" name="fade">
+          <component :is="Component" />
+        </transition>
       </router-view>
     </main>
     <Footer style="margin-top: auto;" />
@@ -23,15 +25,16 @@ export default {
 }  
 </script>
 <style lang="scss">
-
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.1s ease-in-out;
-};
+  transition: all 0.3s ease-in-out;
+}
+
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  // transform: translateY(30px);
 }
 
 * {
@@ -47,6 +50,11 @@ body {
 @font-face {
   font-family: "Lohit Devanagari";
   src: url(fonts/Lohit-Devanagari.ttf);
+}
+
+@font-face {
+  font-family: "Quensides";
+  src: url(fonts/Quensides.ttf);
 }
 
 .container {

@@ -1,12 +1,14 @@
 <template>
-    <h1 class="title">Список кроссвордов</h1>
-    <div v-if="!store.isfirstFetchReady" class="loader-wrapper">
-        <div class="loader"></div>
-    </div>
-    <div class="crosswords-list">
+    <div class="crossword-list-wrapper">
+        <h1 class="title">Кроссворды</h1>
+        <div v-if="!store.isfirstFetchReady" class="loader-wrapper">
+            <div class="loader"></div>
+        </div>
+        <div class="crosswords-list">
             <MainCard v-for="item in crossword_list" :key="item" :header="item.header" :text="item.text"
                 :img-path="item.imgPath" :button-slot="item.buttonSlot" :button-link="item.buttonLink"
-                :img-size="item.imgSize" />
+                :img-size="item.imgSize" :isNeedParam="true" :crossword_id="item.id" />
+        </div>
     </div>
 </template>
 <script setup>
@@ -28,6 +30,12 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 
+.crosswords-list-wrapper {
+   display: flex;
+   width: 100%;
+   align-items: center;
+   justify-content: center;
+}
 .loader-wrapper {
     height: 35vh;
     display: flex;
@@ -58,9 +66,11 @@ onMounted(() => {
 
 .title {
     text-align: center;
-    margin: 60px 0 60px 0;
+    margin: 50px auto 50px auto;
     font-weight: 400;
     font-size: 32px;
+    width: fit-content;
+    border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
 }
 
 .crosswords-list {
