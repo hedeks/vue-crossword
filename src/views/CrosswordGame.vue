@@ -3,7 +3,8 @@
         <div class="crossword-game-view">
             <div class="crossword-game-view-wrapper">
                 <div class="row" v-for="(item, elem) in matrixCrossword" :key="item" :id="elem">
-                    <div class="cell" v-for="(i, index) in item" @click="addClasses(index + ', ' + elem)" :id="index + ', ' + elem" :key="i" :class="{ blackcell: i == null }">
+                    <div class="cell" v-for="(i, index) in item" @click="store.addClassToCurrentCell(index + ', ' + elem)"
+                        :id="index + ', ' + elem" :key="i" :class="{ blackcell: i == null }">
                     </div>
                 </div>
             </div>
@@ -25,6 +26,7 @@
             </div>
         </div>
     </div>
+    <input type="text" id="needed_input" @blur="store.removeClassesFromCells">
 </template>
 
 <script setup>
@@ -38,11 +40,9 @@ const router = useRouter();
 
 onMounted(() => {
     store.fetchCurrent_crosswordFromDB(route.params.id);
+    store.needed_input = document.getElementById('needed_input')
 });
 
-const addClasses = (id)=>{
-    store.addClassToCurrentCell(id);
-}
 const downList = computed(() => {
     var result = {}
     var arr = store.getCurrentCrossword();
@@ -104,10 +104,43 @@ const matrixCrossword = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@keyframes pickedCell {
+    0% {
+        border: 1px solid rgba($color: black, $alpha: 1);
+    }
+
+    50% {
+        outline: rgba(255, 0, 0, 0.4) 1px solid;
+        border: 1px solid rgba($color: red, $alpha: 0.7);
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px, rgba(0, 0, 0, 0.15) 0px 2px 4px, rgba(0, 0, 0, 0.15) 0px 4px 8px, rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.15) 0px 32px 64px;
+    }
+
+    100% {
+        border: 1px solid rgba($color: black, $alpha: 1);
+    }
+}
+
+.picked_cell {
+    z-index: 2;
+    transition: all 0.3s ease;
+    animation: pickedCell 1.1s infinite;
+}
+
+// #needed_input {
+    // width: 0;
+    // height: 0;
+    // border: 0;
+    // outline: 0;
+    // caret-color: transparent;
+    // pointer-events: none;
+// }
 
 .currentcell {
-    background-color: lightgray;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    transition: background-color 0.3s ease-in-out;
+    background-blend-mode: difference;
 }
+
 .title {
     margin-bottom: 20px;
     border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
@@ -148,6 +181,7 @@ const matrixCrossword = computed(() => {
         align-items: center;
         width: 400px;
         margin-right: 20px;
+
         &-wrapper {
             display: flex;
             flex-direction: column;

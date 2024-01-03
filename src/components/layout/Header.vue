@@ -129,6 +129,7 @@ svg {
 }
 
 .header {
+    z-index: 1000;
     margin: 0 -20px 0 -20px;
     height: 66px;
     display: flex;
