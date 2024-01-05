@@ -1,10 +1,12 @@
 <template>
+    <h1 align="center" class="title-h1">{{ store.current_crossword.text + " " + store.current_crossword.header }}</h1>
     <div class="crossword-game">
         <div class="crossword-game-view">
             <div class="crossword-game-view-wrapper">
+                <input type="text" id="needed_input" @blur="store.blur" @input="store.input">
                 <div class="row" v-for="(item, elem) in matrixCrossword" :key="item" :id="elem">
-                    <div class="cell" v-for="(i, index) in item" @click="store.addClassToCurrentCell(index + ', ' + elem)"
-                        :id="index + ', ' + elem" :key="i" :class="{ blackcell: i == null }">
+                    <div class="cell" v-for="(i, index) in item" @click="store.addClassToCurrentCell(elem + ', ' + index)"
+                        :id="elem + ', ' + index" :key="i" :class="{ blackcell: i == null }">
                     </div>
                 </div>
             </div>
@@ -13,7 +15,10 @@
             <div class="crossword-game-down-title">
                 <h3 align="center" class="title">По вертикали</h3>
                 <ol class="ol">
-                    <li v-for="(item, index) in downList" :key="index"> {{ parseInt(index) + 1 + ". " + item.clue }}</li>
+                    <li v-for="(item, index) in downList" class="li" :id="'li' + index" @click="store.clickToLi(index)"
+                        :key="index"> {{ parseInt(index) + 1
+                            + ". "
+                            + item.clue }}</li>
                 </ol>
             </div>
         </div>
@@ -21,12 +26,14 @@
             <div class="crossword-game-across-title">
                 <h3 align="center" class="title">По горизонтали</h3>
                 <ol class="ol">
-                    <li v-for="(item, index) in acrossList" :key="index"> {{ parseInt(index) + 1 + ". " + item.clue }}</li>
+                    <li v-for="(item, index) in acrossList" class="li" :id="'li' + index" @click="store.clickToLi(index)"
+                        :key="index"> {{ parseInt(index) +
+                            1 +
+                            "." + item.clue }}</li>
                 </ol>
             </div>
         </div>
     </div>
-    <input type="text" id="needed_input" @blur="store.removeClassesFromCells">
 </template>
 
 <script setup>
@@ -40,7 +47,7 @@ const router = useRouter();
 
 onMounted(() => {
     store.fetchCurrent_crosswordFromDB(route.params.id);
-    store.needed_input = document.getElementById('needed_input')
+    store.needed_input = document.getElementById('needed_input');
 });
 
 const downList = computed(() => {
@@ -106,38 +113,63 @@ const matrixCrossword = computed(() => {
 <style lang="scss" scoped>
 @keyframes pickedCell {
     0% {
+        outline: none;
         border: 1px solid rgba($color: black, $alpha: 1);
     }
 
     50% {
-        outline: rgba(255, 0, 0, 0.4) 1px solid;
-        border: 1px solid rgba($color: red, $alpha: 0.7);
+        outline: solid 1px rgb(255, 255, 255);
+        border: 1px solid rgba($color: white, $alpha: 1);
         box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px, rgba(0, 0, 0, 0.15) 0px 2px 4px, rgba(0, 0, 0, 0.15) 0px 4px 8px, rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.15) 0px 32px 64px;
     }
 
     100% {
+        outline: solid 1 rgb(255, 205, 205);
         border: 1px solid rgba($color: black, $alpha: 1);
     }
 }
 
 .picked_cell {
     z-index: 2;
-    transition: all 0.3s ease;
-    animation: pickedCell 1.1s infinite;
+    transition: all 0.3s ease-in-out;
+    animation: pickedCell 2s infinite !important;
 }
 
-// #needed_input {
-    // width: 0;
-    // height: 0;
-    // border: 0;
-    // outline: 0;
-    // caret-color: transparent;
-    // pointer-events: none;
-// }
+#needed_input {
+    width: 0;
+    height: 0;
+    border: 0;
+    outline: 0;
+    caret-color: transparent;
+    pointer-events: none;
+}
+
+.currentli {
+    background-color: #D9D9D9 !important;
+    transition: background-color .5s ease-in-out;
+    animation: pickedCell 2s infinite;
+}
+
+.li {
+    border: 1px solid transparent;
+    padding: 5px;
+
+    &-hover {
+        cursor: none;
+    }
+}
+
+.title-h1 {
+    text-align: center;
+    margin: 50px auto 0 auto;
+    font-weight: 400;
+    font-size: 28px;
+    width: fit-content;
+    border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
+}
 
 .currentcell {
-    background-color: rgba(0, 0, 0, 0.3) !important;
-    transition: background-color 0.3s ease-in-out;
+    background-color: #D9D9D9 !important;
     background-blend-mode: difference;
 }
 
@@ -153,18 +185,56 @@ const matrixCrossword = computed(() => {
     background-color: black;
 }
 
+.incorrect {
+    animation: slide 0.4s ease-in-out;
+    background-color: rgba(255, 0, 0, 0.5) !important;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.correct {
+    animation: scale 0.4s ease-in-out;
+    background-color: rgb(127, 233, 135, 0.4);
+    background-blend-mode: soft-light;
+    transition: background-color 0.3s ease-in-out;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(5px);
+    }
+
+    50% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes scale {
+    0% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 .row {
     display: flex;
 }
 
 .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid black;
     width: 50px;
     height: 50px;
-    display: inline-block;
-    text-align: center;
-    transition: border 0.1s ease-in-out, outline 0.1s ease-in-out,
-        background-color 0.3s ease-in-out;
+    transition: border 0.3s ease-in-out, outline 0.3s ease-in-out,
+        background-color .5s ease-in-out;
 }
 
 .crossword-game {
@@ -172,7 +242,7 @@ const matrixCrossword = computed(() => {
     display: flex;
     justify-content: center;
     gap: 50px;
-    padding: 100px 0 100px 0;
+    padding: 50px 0 50px 0;
     flex-wrap: wrap;
 
     &-view {
@@ -234,5 +304,4 @@ const matrixCrossword = computed(() => {
         border-top: 1px solid rgba(0, 0, 0, 0.1);
         padding: 20px 0 0 0;
     }
-}
-</style>
+}</style>

@@ -56,7 +56,7 @@ const props = defineProps({
 
     &:hover {
         cursor: default;
-        background-color: #dddddd;
+        background-color: #f2f2f2;
         border: 1px solid black;
     }
 
@@ -113,7 +113,6 @@ const props = defineProps({
             background-color: white;
             border: 1px solid black;
             color: black;
-            transform: scale(1.05);
             cursor: pointer;
         }
 
