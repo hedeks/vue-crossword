@@ -29,7 +29,7 @@
                     <li v-for="(item, index) in acrossList" class="li" :id="'li' + index" @click="store.clickToLi(index)"
                         :key="index"> {{ parseInt(index) +
                             1 +
-                            "." + item.clue }}</li>
+                            ". " + item.clue }}</li>
                 </ol>
             </div>
         </div>
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onBeforeMount } from 'vue'
 import { crosswordStore } from "@/stores/store"
 import { useRoute, useRouter } from 'vue-router'
 
@@ -46,10 +46,10 @@ const route = useRoute();
 const router = useRouter();
 
 onMounted(() => {
+    store.reset();
     store.fetchCurrent_crosswordFromDB(route.params.id);
     store.needed_input = document.getElementById('needed_input');
 });
-
 const downList = computed(() => {
     var result = {}
     var arr = store.getCurrentCrossword();
@@ -118,13 +118,12 @@ const matrixCrossword = computed(() => {
     }
 
     50% {
-        outline: solid 1px rgb(255, 255, 255);
-        border: 1px solid rgba($color: white, $alpha: 1);
+        border: 1px solid rgba($color: rgb(255, 0, 0), $alpha: 1);
         box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px, rgba(0, 0, 0, 0.15) 0px 2px 4px, rgba(0, 0, 0, 0.15) 0px 4px 8px, rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.15) 0px 16px 32px, rgba(0, 0, 0, 0.15) 0px 32px 64px;
     }
 
     100% {
-        outline: solid 1 rgb(255, 205, 205);
+        // outline: solid 1pc rgb(255, 0, 0);
         border: 1px solid rgba($color: black, $alpha: 1);
     }
 }
@@ -145,7 +144,7 @@ const matrixCrossword = computed(() => {
 }
 
 .currentli {
-    background-color: #D9D9D9 !important;
+    background-color: #dfdfdf !important;
     transition: background-color .5s ease-in-out;
     animation: pickedCell 2s infinite;
 }
@@ -169,7 +168,7 @@ const matrixCrossword = computed(() => {
 }
 
 .currentcell {
-    background-color: #D9D9D9 !important;
+    background-color: #dfdfdf !important;
     background-blend-mode: difference;
 }
 
@@ -304,4 +303,5 @@ const matrixCrossword = computed(() => {
         border-top: 1px solid rgba(0, 0, 0, 0.1);
         padding: 20px 0 0 0;
     }
-}</style>
+}
+</style>

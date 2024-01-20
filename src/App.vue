@@ -25,6 +25,7 @@ export default {
 }  
 </script>
 <style lang="scss">
+@import url('https://fonts.cdnfonts.com/css/source-sans-pro');
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.3s ease;
@@ -66,7 +67,7 @@ body {
   margin: auto;
   display: flex;
   flex-direction: column;
-  width: 1440px;
+  max-width: 1440px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 0 20px 0 20px;
   min-height: 100vh;

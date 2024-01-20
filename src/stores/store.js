@@ -13,6 +13,7 @@ export const crosswordStore = defineStore("crosswordStore", {
     iscrosswordFetchReady: false,
     currentUsername: "",
     currentUserEmail: "",
+    currentLastWins: [],
     url: "http://localhost:5000",
     previous_word: {},
     current_word: {},
@@ -25,6 +26,11 @@ export const crosswordStore = defineStore("crosswordStore", {
     frominput: false,
     needed_input: {},
     right_words: [],
+    isWin: false,
+    isCrosswordStarted: false,
+    startTime: null,
+    endTime: null,
+    finalTime: null,
   }),
 
   actions: {
@@ -44,6 +50,24 @@ export const crosswordStore = defineStore("crosswordStore", {
           this.iscrosswordFetchReady = true;
           this.addIconsToCrossword();
         });
+    },
+    async sendResultToDB(object) {
+      try {
+        const response = await fetch(this.url + "/stats/add-lastwin", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify(object),
+        });
+        if (!response.ok) {
+          throw new Error("HTTP error " + response.status);
+        }
+        return true;
+      } catch (error) {
+        return false;
+      }
     },
     addIconsToCrossword() {
       let words = this.current_crossword.words;
@@ -81,15 +105,14 @@ export const crosswordStore = defineStore("crosswordStore", {
           isRight = true;
         } else {
           isRight = false;
+          break;
         }
       }
 
       if (isRight) {
-
-        if (!this.right_words.includes(this.current_word)){
+        if (!this.right_words.includes(this.current_word)) {
           this.right_words.push(this.current_word);
         }
-
         for (let item in this.current_word.coordinates) {
           let cell = document.getElementById(
             this.current_word.coordinates[item]
@@ -97,6 +120,33 @@ export const crosswordStore = defineStore("crosswordStore", {
           cell.classList.remove("correct");
           cell.classList.remove("incorrect");
           cell.classList.add("correct");
+        }
+        if (this.right_words.length === this.current_crossword.words.length) {
+          for (let i = 0; i < this.right_words.length; i++) {
+            if (this.right_words.includes(this.current_crossword.words[i])) {
+              this.isWin = true;
+            } else {
+              this.isWin = false;
+              break;
+            }
+          }
+        }
+        console.log(this.right_words);
+        console.log(this.current_crossword.words);
+        if (this.isWin) {
+          this.right_words = [];
+          this.endTime = new Date();
+          this.finalTime = Math.ceil(
+            Math.abs(this.endTime - this.startTime) / 1000
+          );
+          this.sendResultToDB({
+            date: this.startTime,
+            timeToSolveInSeconds: this.finalTime,
+            crossword_id: this.current_crossword.id,
+            crossword: this.current_crossword,
+          });
+          alert("Вы выиграли");
+          this.isWin = false;
         }
       } else {
         for (let item in this.current_word.coordinates) {
@@ -106,7 +156,7 @@ export const crosswordStore = defineStore("crosswordStore", {
           cell.classList.remove("correct");
           cell.classList.remove("incorrect");
           cell.classList.add("incorrect");
-          this.clearTheCells()
+          this.clearTheCells();
         }
         return new Promise((resolve) =>
           setTimeout(() => {
@@ -206,11 +256,9 @@ export const crosswordStore = defineStore("crosswordStore", {
         this.current_word = this.current_array_with_words[0];
       }
     },
-    clearTheCells(){
+    clearTheCells() {
       for (let item in this.current_word.coordinates) {
-        let cell = document.getElementById(
-          this.current_word.coordinates[item]
-        );
+        let cell = document.getElementById(this.current_word.coordinates[item]);
         cell.textContent = "";
       }
     },
@@ -240,11 +288,18 @@ export const crosswordStore = defineStore("crosswordStore", {
       this.current_word = this.current_crossword.words[index];
       this.previous_word = this.current_word;
       this.previousCellID = this.current_word.coordinates[1];
-      document
-        .getElementById(this.current_word.coordinates[0])
-        .click();
+      document.getElementById(this.current_word.coordinates[0]).click();
+    },
+    reset() {
+      this.isCrosswordStarted = false;
+      this.right_words = [];
+      this.startTime = null;
     },
     addClassToCurrentCell(id) {
+      if (!this.isCrosswordStarted) {
+        this.startTime = new Date();
+        this.isCrosswordStarted = true;
+      }
       if (!document.getElementById(id).classList.contains("blackcell")) {
         this.currentCellID = id;
         this.currentCell = document.getElementById(this.currentCellID);
@@ -331,6 +386,7 @@ export const crosswordStore = defineStore("crosswordStore", {
       }
       const data = await response.json();
       this.currentUserEmail = data[0].email;
+      this.currentLastWins = data[0].lastWins;
       this.currentUsername = data[0].name;
       return true;
     },

@@ -1,6 +1,6 @@
 <template>
     <div class="crossword-create-page">
-        <h1>НЕЧЕГО СОЗДАВАТЬ!!!! БД ЕЩЕ НИХУЯ НЕ СДЕЛАНА</h1>
+        <h1>Данная функция еще в разработке</h1>
     </div>
 </template>
 <style lang="scss">

@@ -7,7 +7,7 @@
         <div class="crosswords-list">
             <MainCard v-for="item in crossword_list" :key="item" :header="item.header" :text="item.text"
                 :img-path="item.imgPath" :button-slot="item.buttonSlot" :button-link="item.buttonLink"
-                :img-size="item.imgSize" :isNeedParam="true" :crossword_id="item.id" />
+                :img-size="item.imgSize" :isNeedParam="true" :crossword_id="item.id" :isNeedButton="true" :cardSize ="'normal'"/>
         </div>
     </div>
 </template>

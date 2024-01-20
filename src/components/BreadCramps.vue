@@ -7,11 +7,14 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { watch, ref, computed } from 'vue'
+import { crosswordStore } from "@/stores/store"
+
+const store = crosswordStore();
 const route = useRoute();
 
 const path = computed(() => {
     let result = route.path.split('/').reverse();
-    let popped = result.pop();
+    result.pop();
     result = result.reverse();
     if (result.length === 1) {
         if (result[0] === "") {
@@ -21,6 +24,27 @@ const path = computed(() => {
         }
     } else {
         result.unshift('home');
+    }
+
+    for (let item in result){
+        if (result[item] === "home"){
+            result[item] = "Главная"
+        }
+        if (result[item] === "crosswordslist"){
+            result[item] = "Список кроссвордов"
+        }
+        if (result[item] === "create"){
+            result[item] = "Создать кроссворд"
+        }
+        if (result[item] === "login"){
+            result[item] = "Авторизация"
+        }
+        if (result[item] === "profile"){
+            result[item] = "Личная страница"
+        }
+        if (Number(result[item]) === store.current_crossword.id){
+            result[item] = store.current_crossword.text;
+        }
     }
     return result;
 });
