@@ -31,6 +31,7 @@ export const crosswordStore = defineStore("crosswordStore", {
     startTime: null,
     endTime: null,
     finalTime: null,
+    showWinWindow: false,
   }),
 
   actions: {
@@ -131,8 +132,6 @@ export const crosswordStore = defineStore("crosswordStore", {
             }
           }
         }
-        console.log(this.right_words);
-        console.log(this.current_crossword.words);
         if (this.isWin) {
           this.right_words = [];
           this.endTime = new Date();
@@ -145,7 +144,7 @@ export const crosswordStore = defineStore("crosswordStore", {
             crossword_id: this.current_crossword.id,
             crossword: this.current_crossword,
           });
-          alert("Вы выиграли");
+          this.showWinWindow = true;
           this.isWin = false;
         }
       } else {
@@ -322,6 +321,22 @@ export const crosswordStore = defineStore("crosswordStore", {
         this.addClassesToLi();
         this.previous_word = this.current_word;
       }
+    },
+    winWithoutChecks() {
+      this.clickToLi("0");
+      this.right_words = [];
+      this.endTime = new Date();
+      this.finalTime = Math.ceil(
+        Math.abs(this.endTime - this.startTime) / 1000
+      );
+      this.sendResultToDB({
+        date: this.startTime,
+        timeToSolveInSeconds: this.finalTime,
+        crossword_id: this.current_crossword.id,
+        crossword: this.current_crossword,
+      });
+      this.showWinWindow = true;
+      this.isWin = false;
     },
     async register(email, password, login) {
       try {

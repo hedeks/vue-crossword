@@ -33,13 +33,35 @@
                 </ol>
             </div>
         </div>
+        <my-dialog :show="store.showWinWindow">
+            <div class="win-form">
+                <div class="win-form-title">Отлично! Вы справились!</div>
+                <div class="win-form-main">
+                    <div class="win-form-main_img">
+                        <img src="@/assets/win-crossword.png" alt="">
+                    </div>
+                    <div class="win-form-main_description">
+                        {{ "Вы решили весь кроссворд за " + store.finalTime + " сек" }}
+                        <img src="@/assets/ok-icon.svg" width="20px" alt="">
+                    </div>
+                </div>
+                <div class="win-form-main-buttons">
+                    <button @click="router.push({ name: 'CrosswordsList' }); store.showWinWindow = false" class="button">К
+                        списку кроссвордов</button>
+                    <button @click="router.push({ name: 'Profile' }); store.showWinWindow = false"
+                        class="button">Профиль</button>
+                </div>
+            </div>
+        </my-dialog>
     </div>
+    <button @click="store.winWithoutChecks">Выиграть</button>
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeMount } from 'vue'
+import { computed, onMounted } from 'vue'
 import { crosswordStore } from "@/stores/store"
 import { useRoute, useRouter } from 'vue-router'
+import MyDialog from '@/components/MyDialog.vue';
 
 const store = crosswordStore();
 const route = useRoute();
@@ -304,4 +326,74 @@ const matrixCrossword = computed(() => {
         padding: 20px 0 0 0;
     }
 }
-</style>
+
+.win-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    &-title {
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        font-weight: 400;
+        font-size: 28px;
+        width: fit-content;
+        border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
+    }
+
+    &-main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &_img {
+            transition: transform 0.1s ease;
+
+            &:hover {
+                transform: scale(0.95);
+            }
+
+            img {
+                width: 100px;
+            }
+        }
+
+        &_description {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        &-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    }
+
+    .button {
+        width: 160px;
+        height: 30px;
+        background-color: #b1b1b1;
+        border: 0;
+        border-radius: 20px;
+        transition: transform 0.1s ease, background-color 0.5s ease;
+        color: white;
+
+        &:hover {
+            background-color: white;
+            border: 1px solid black;
+            color: black;
+            cursor: pointer;
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}</style>

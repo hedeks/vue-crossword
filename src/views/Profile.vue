@@ -17,7 +17,7 @@
             <h3 class="title">Ваша статистика</h3>
             <div class="profile-stats card-inner">
                 <span class="info">Решено кроссвордов всего: {{ store.currentLastWins.length }}</span>
-                <span class="info">Решенные кроссворды: </span>
+                <span class="info">История решения кроссвордов: </span>
                 <div class="cards">
                     <MainCard v-for="object of store.currentLastWins"
                         :header="truncateString(object.crossword.text, 45)"
