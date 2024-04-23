@@ -1,5 +1,5 @@
 <template>
-    <div class="dialog" v-if="props.show" @click="hideDialog">
+    <div class="dialog" v-if="showWindow" @click="hideDialog">
         <div class="dialog-content" @click.stop>
             <slot></slot>
         </div>
@@ -7,7 +7,7 @@
 </template>
 <script setup>
 import { crosswordStore } from "@/stores/store"
-
+import { ref } from "vue";
 const store = crosswordStore();
 
 const props = defineProps({
@@ -17,8 +17,10 @@ const props = defineProps({
     }
 });
 
-function hideDialog (){
-    store.showWinWindow = false;
+let showWindow = ref(props.show);
+
+function hideDialog() {
+    showWindow.value = false;
 }
 </script>
 <style lang="scss" scoped>
@@ -31,6 +33,7 @@ function hideDialog (){
     background: rgba(161, 161, 161, 0.5);
     display: flex;
     z-index: 1000;
+
     &-content {
         margin: auto;
         background: #f2f2f2;
