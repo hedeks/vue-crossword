@@ -1,26 +1,49 @@
 <template>
   <div class="container">
     <Header />
-    <TypesMenu />
     <BreadCramps />
+    <main>
+      <router-view v-slot="{ Component }">
+        <transition :duration="100" name="fade">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </main>
+    <Footer style="margin-top: auto;" />
   </div>
 </template>
 
 <script>
 import Header from '@/components/layout/Header.vue';
 import BreadCramps from '@/components/BreadCramps.vue';
-import TypesMenu from '@/components/layout/TypesMenu.vue';
+import Footer from '@/components/layout/Footer.vue';
 
 export default {
   components: {
-    Header, BreadCramps, TypesMenu
+    Header, BreadCramps, Footer
   }
 }  
 </script>
-<script setup>
-</script>
-
 <style lang="scss">
+@import url('https://fonts.cdnfonts.com/css/source-sans-pro');
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  // transform: translateY(30px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: Lohit Devanagari;
 }
@@ -30,14 +53,31 @@ body {
   src: url(fonts/Lohit-Devanagari.ttf);
 }
 
-.container {
-  margin: auto;
-  width: 1440px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 0 20px 0 20px;
+@font-face {
+  font-family: "Inter";
+  src: url(fonts/Inter-VariableFont_slnt,wght.ttf);
 }
 
-@media only screen and (max-width: 1280px) {
+@font-face {
+  font-family: "Quensides";
+  src: url(fonts/Quensides.ttf);
+}
+
+.container {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 1440px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0 20px 0 20px;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+@media only screen and (max-width: 1440px) {
   .container {
     width: 100%;
   }
